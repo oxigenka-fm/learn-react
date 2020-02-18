@@ -1,7 +1,17 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Header from './Header';
+import CheckAll from './CheckAll';
+import TodoList from './TodoList';
+import Footer from './Footer';
+import TodoItemsModel from './TodoItemsModel';
 
+const model = new TodoItemsModel([
+  {id: 1, text: 'Todo 1', completed: false},
+  {id: 2, text: 'Todo 2', completed: true},
+  {id: 3, text: 'Todo 3', completed: false},
+]);
+
+/*
 function App() {
   return (
     <div className="App">
@@ -21,6 +31,34 @@ function App() {
       </header>
     </div>
   );
+}
+*/
+
+class App extends React.Component {
+  constructor() {
+    super();
+
+    this.state = {
+      todos: model
+    };
+  }
+
+  getCount() {
+    return this.state.todos.getCount();
+  }
+
+  render() {
+    return (
+      <div>
+        <Header />
+        <section className="main">
+          <CheckAll />
+          <TodoList todos={this.state.todos} />
+        </section>
+        <Footer clear={() => this.clearCompleted()} count={this.getCount()} />
+      </div>
+    );
+  }
 }
 
 export default App;

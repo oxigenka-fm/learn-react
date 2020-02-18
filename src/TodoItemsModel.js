@@ -1,0 +1,39 @@
+class TodoItemsModel {
+  constructor(items = []) {
+    this.items = items;
+
+    this.index = items.reduce((item, index) => Math.max(index, item.id), 0);
+
+    this.index = this.index || 0;
+  }
+
+  getCount() {
+    return this.items.length;
+  }
+
+  getItems() {
+    return this.items;
+  }
+
+  addItem(item) {
+    const itemId = Number(item.id);
+
+    if (itemId < this.index) {
+      item.id = this.index++;
+    } else {
+      this.index = itemId;
+    }
+
+    this.items.push(item);
+  }
+
+  removeItem(item) {
+    this.items = this.items.filter(todo => item.id !== todo.id);
+  }
+
+  removeCompleted() {
+    this.items = this.items.filter(todo => !todo.completed);
+  }
+}
+
+export default TodoItemsModel;
