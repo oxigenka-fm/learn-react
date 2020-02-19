@@ -41,7 +41,8 @@ class App extends React.Component {
     super();
 
     this.state = {
-      todos: model
+      todos: model.getItems(),
+      filters: model.getFilters()
     };
   }
 
@@ -49,18 +50,23 @@ class App extends React.Component {
     model.addItem({label: text, completed: false});
 
     this.setState({
-      todos: model
+      todos: model.getItems()
     });
   }
 
-  toggleAllCompleted(isOn) {
+  toggleAllCompleted() {
+    model.toggleAllCompleted();
+
     this.setState({
-      todos: model.toggleAllCompleted(isOn)
+      todos: model.getItems()
     });
   }
 
-  getCount() {
-    return this.state.todos.getCount();
+  setFilterSelected(filterId) {
+    model.setFilterSelected(filterId);
+    this.setState({
+      filters: model.getFilters()
+    });
   }
 
   render() {
@@ -68,10 +74,14 @@ class App extends React.Component {
       <div>
         <Header />
         <section className="main">
-          <CheckAll toggleCompleted={isOn => this.toggleAllCompleted(isOn)} />
+          <CheckAll checked={!model.getItems('active').length} toggleAllCompleted={() => this.toggleAllCompleted()} />
           <TodoList todos={this.state.todos} toggle />
         </section>
-        <Footer clear={() => this.clearCompleted()} count={this.getCount()} />
+        <Footer clear={() => this.clearCompleted()}
+          count={model.getCount()}
+          filters={model.getFilters()}
+          setFilterSelected={filterId => this.setFilterSelected(filterId)}
+        />
       </div>
     );
   }

@@ -4,45 +4,41 @@ class FilterItem extends React.Component {
   onClick(e) {
     e.preventDefault();
 
-    this.props.onFilter(this.props.item);
+    this.props.onFilter(this.props.filter.id);
   }
 
   render() {
-    const item = this.props.item;
+    const item = this.props.filter;
     return (
       <li>
-        <a href={item.href} className={item.selected ? 'selected' : ''} onClick={event => this.onClick(event)}>{item.title}</a>
+        <a href={item.id} className={item.selected ? 'selected' : ''} onClick={event => this.onClick(event)}>{item.title}</a>
       </li>
     )
   }
 }
 
 class Filters extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      items: [
-        {href: 'all', title: 'All', selected: true},
-        {href: 'active', title: 'Active', selected: false},
-        {href: 'completed', title: 'Completed', selected: false}
-      ]
-    };
-  }
+  // constructor(props) {
+  //   super();
+  //   this.state = {
+  //     filters: props.filters
+  //   };
+  // }
 
-  onFilter(item) {
-    const items = this.state.items.map(loopItem => {
-      loopItem.selected = loopItem.href === item.href ? true : false;
-      return loopItem;
-    });
+  // onFilter(item) {
+  //   const items = this.state.filters.map(loopItem => {
+  //     loopItem.selected = loopItem.id === item.id ? true : false;
+  //     return loopItem;
+  //   });
 
-    this.setState({items: items});
-  }
+  //   this.setState({filters: items});
+  // }
 
   render() {
     return (
       <ul className='filters'>
-        {this.state.items.map(item => (
-          <FilterItem key={item.href} item={item} onFilter={i => this.onFilter(i)}/>
+        {this.props.filters.map(item => (
+          <FilterItem key={item.id} filter={item} onFilter={i => this.props.setFilterSelected(i)}/>
         ))}
       </ul>
     )

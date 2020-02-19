@@ -3,15 +3,16 @@ import Filters from './Filters';
 
 class Footer extends React.Component {
   getCounterText() {
-    const count = 0;
-    return count ? (`${count} item${count === 1 ? '' : 's'} left`) : 'Empty list';
+    return this.props.count
+      ? (`${this.props.count} item${this.props.count === 1 ? '' : 's'} left`)
+      : 'Empty list';
   }
 
   render() {
     return (
       <footer className="footer">
         <span className="todo-count">{this.getCounterText()}</span>
-        <Filters/>
+        <Filters filters={this.props.filters} setFilterSelected={this.props.setFilterSelected}/>
         <button className="clear-completed">Clear completed</button>
       </footer>
     );
