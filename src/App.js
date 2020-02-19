@@ -5,10 +5,12 @@ import TodoList from './TodoList';
 import Footer from './Footer';
 import TodoItemsModel from './TodoItemsModel';
 
-const model = new TodoItemsModel([
-  {id: 1, text: 'Todo 1', completed: false},
-  {id: 2, text: 'Todo 2', completed: true},
-  {id: 3, text: 'Todo 3', completed: false},
+const initTodos = todos => new TodoItemsModel(todos);
+
+let model = initTodos([
+  {id: 1, label: 'Todo 1', completed: false},
+  {id: 2, label: 'Todo 2', completed: true},
+  {id: 3, label: 'Todo 3', completed: false},
 ]);
 
 /*
@@ -43,6 +45,20 @@ class App extends React.Component {
     };
   }
 
+  addItem(text) {
+    model.addItem({label: text, completed: false});
+
+    this.setState({
+      todos: model
+    });
+  }
+
+  toggleAllCompleted(isOn) {
+    this.setState({
+      todos: model.toggleAllCompleted(isOn)
+    });
+  }
+
   getCount() {
     return this.state.todos.getCount();
   }
@@ -52,8 +68,8 @@ class App extends React.Component {
       <div>
         <Header />
         <section className="main">
-          <CheckAll />
-          <TodoList todos={this.state.todos} />
+          <CheckAll toggleCompleted={isOn => this.toggleAllCompleted(isOn)} />
+          <TodoList todos={this.state.todos} toggle />
         </section>
         <Footer clear={() => this.clearCompleted()} count={this.getCount()} />
       </div>

@@ -15,6 +15,14 @@ class TodoItemsModel {
     return this.items;
   }
 
+  toggleAllCompleted(isOn) {
+    this.items = this.items.map(item => {
+      isOn && !item.completed && (item.completed = true);
+      !isOn && item.completed && (item.completed = false);
+      return item;
+    });
+  }
+
   addItem(item) {
     const itemId = Number(item.id);
 
