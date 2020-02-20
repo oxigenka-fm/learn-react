@@ -1,6 +1,6 @@
 import React from 'react';
 
-class CheckAll extends React.Component {
+export default class CheckAll extends React.Component {
   onChange() {
     // TODO: find out why no THIS defined here!!!
     console.log(this.props);
@@ -10,11 +10,9 @@ class CheckAll extends React.Component {
   render() {
     return (
       <div>
-        <input id="toggle-all" className="toggle-all" onChange={this.onChange} checked={this.props.checked} type="checkbox" />
+        <input id="toggle-all" className="toggle-all" onChange={this.onChange} defaultChecked={this.props.isChecked} type="checkbox" />
         <label htmlFor="toggle-all">Mark all as complete</label>
       </div>
     );
   }
 }
-
-export default CheckAll;

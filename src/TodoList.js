@@ -1,21 +1,16 @@
 import React from 'react';
 
 class TodoItem extends React.Component {
-  constructor(props) {
-    super();
-    this.item = props.item || null;
-  }
-
   render() {
-    if (!this.item) {
+    if (!this.props.item) {
       return null;
     }
 
     return (
-      <li className={this.item.completed ? 'completed' : ''}>
+      <li className={this.props.item.completed ? 'completed' : ''}>
         <div className="view">
-          <input className="toggle" type="checkbox" checked={this.item.completed} />
-          <label>{this.item.title}</label>
+          <input className="toggle" type="checkbox" defaultChecked={this.props.item.completed} />
+          <label>{this.props.item.title}</label>
           <button className="destroy"></button>
         </div>
       </li>
@@ -23,25 +18,16 @@ class TodoItem extends React.Component {
   }
 }
 
-class TodoList extends React.Component {
-  constructor(props) {
-    super();
-    this.items = props.items ? props.items.map(item => (
-      <TodoItem key={item.id} item={item}/>
-    )) : [];
-  }
-
+export default class TodoList extends React.Component {
   render() {
-    if (!this.items.length) {
+    if (!this.props.todos.length) {
       return null;
     }
 
     return (
       <ul className="todo-list">
-        {this.items}
+        {this.props.todos.map(item => <TodoItem key={item.id} item={item}/>)}
       </ul>
     );
   }
 }
-
-export default TodoList;

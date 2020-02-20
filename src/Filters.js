@@ -17,23 +17,7 @@ class FilterItem extends React.Component {
   }
 }
 
-class Filters extends React.Component {
-  // constructor(props) {
-  //   super();
-  //   this.state = {
-  //     filters: props.filters
-  //   };
-  // }
-
-  // onFilter(item) {
-  //   const items = this.state.filters.map(loopItem => {
-  //     loopItem.selected = loopItem.id === item.id ? true : false;
-  //     return loopItem;
-  //   });
-
-  //   this.setState({filters: items});
-  // }
-
+export default class Filters extends React.Component {
   render() {
     return (
       <ul className='filters'>
@@ -44,5 +28,3 @@ class Filters extends React.Component {
     )
   }
 }
-
-export default Filters;

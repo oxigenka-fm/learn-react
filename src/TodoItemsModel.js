@@ -4,7 +4,15 @@ const filters = [
   {id: 'completed', title: 'Completed', selected: false}
 ];
 
-const getFilterSelected = () => filters.reduce((item, current) => item.selected ? item.id : current, 'all');
+const getFilterSelected = () => {
+  const currentFilter = filters.filter(item => {
+    console.log('getFilterSelected:', item.id, '=', item.selected);
+    return item.selected;
+  });
+
+  console.log('currentFilter', currentFilter[0]);
+  return currentFilter[0];
+};
 
 class TodoItemsModel {
   constructor(items = []) {
@@ -23,14 +31,22 @@ class TodoItemsModel {
     filters.forEach((filter, idx) => filters[idx].selected = filter.id === filterId);
   }
 
-  getCount() {
-    return this.items.length;
+  getActiveTodosCount() {
+    return this.items.reduce((item, count) => {
+      if (!item.completed) {
+        count++;
+      }
+
+      return count;
+    }, 0);
   }
 
   getItems(filterId = null) {
+    console.log('requested filter:', filterId);
     if (!filterId) {
-      filterId = getFilterSelected();
+      filterId = getFilterSelected().id;
     }
+    console.log('getItems: filterId =', filterId);
 
     if (filterId === 'all') {
       return this.items;
@@ -41,7 +57,7 @@ class TodoItemsModel {
     });
   }
 
-  toggleAllCompleted(isOn) {
+  toggleAllTodosCompleted(isOn) {
     this.items = this.items.map(item => {
       isOn && !item.completed && (item.completed = true);
       !isOn && item.completed && (item.completed = false);

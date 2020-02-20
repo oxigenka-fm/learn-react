@@ -8,9 +8,9 @@ import TodoItemsModel from './TodoItemsModel';
 const initTodos = todos => new TodoItemsModel(todos);
 
 let model = initTodos([
-  {id: 1, label: 'Todo 1', completed: false},
-  {id: 2, label: 'Todo 2', completed: true},
-  {id: 3, label: 'Todo 3', completed: false},
+  {id: 1, title: 'Todo 1', completed: true},
+  {id: 2, title: 'Todo 2', completed: true},
+  {id: 3, title: 'Todo 3', completed: true},
 ]);
 
 /*
@@ -36,10 +36,11 @@ function App() {
 }
 */
 
-class App extends React.Component {
+export default class App extends React.Component {
   constructor() {
     super();
 
+    console.log('App construct');
     this.state = {
       todos: model.getItems(),
       filters: model.getFilters()
@@ -55,7 +56,7 @@ class App extends React.Component {
   }
 
   toggleAllCompleted() {
-    model.toggleAllCompleted();
+    model.toggleAllTodosCompleted();
 
     this.setState({
       todos: model.getItems()
@@ -64,6 +65,7 @@ class App extends React.Component {
 
   setFilterSelected(filterId) {
     model.setFilterSelected(filterId);
+
     this.setState({
       filters: model.getFilters()
     });
@@ -74,11 +76,11 @@ class App extends React.Component {
       <div>
         <Header />
         <section className="main">
-          <CheckAll checked={!model.getItems('active').length} toggleAllCompleted={() => this.toggleAllCompleted()} />
-          <TodoList todos={this.state.todos} toggle />
+          <CheckAll isChecked={console.log('isChecked template') || !model.getItems('active').length} toggleAllCompleted={() => this.toggleAllCompleted()} />
+          <TodoList todos={this.state.todos} />
         </section>
         <Footer clear={() => this.clearCompleted()}
-          count={model.getCount()}
+          count={model.getActiveTodosCount()}
           filters={model.getFilters()}
           setFilterSelected={filterId => this.setFilterSelected(filterId)}
         />
@@ -86,5 +88,3 @@ class App extends React.Component {
     );
   }
 }
-
-export default App;

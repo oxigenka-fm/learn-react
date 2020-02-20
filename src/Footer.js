@@ -1,7 +1,7 @@
 import React from 'react';
 import Filters from './Filters';
 
-class Footer extends React.Component {
+export default class Footer extends React.Component {
   getCounterText() {
     return this.props.count
       ? (`${this.props.count} item${this.props.count === 1 ? '' : 's'} left`)
@@ -18,5 +18,3 @@ class Footer extends React.Component {
     );
   }
 }
-
-export default Footer;
