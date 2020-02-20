@@ -5,22 +5,19 @@ const filters = [
 ];
 
 const getFilterSelected = () => {
-  const currentFilter = filters.filter(item => {
-    console.log('getFilterSelected:', item.id, '=', item.selected);
-    return item.selected;
-  });
-
-  console.log('currentFilter', currentFilter[0]);
+  const currentFilter = filters.filter(item => item.selected);
   return currentFilter[0];
 };
+
+let todoNextId = 1;
 
 class TodoItemsModel {
   constructor(items = []) {
     this.items = items;
 
-    this.index = items.reduce((item, index) => Math.max(index, item.id), 0);
-
-    this.index = this.index || 0;
+    if (this.items.length) {
+      todoNextId = items.reduce((index, item) => Math.max(index, item.id), 0) + 1;
+    }
   }
 
   getFilters() {
@@ -32,21 +29,25 @@ class TodoItemsModel {
   }
 
   getActiveTodosCount() {
-    return this.items.reduce((item, count) => {
-      if (!item.completed) {
-        count++;
-      }
+    if (!this.items.length) {
+      return null;
+    }
 
-      return count;
-    }, 0);
+    return this.getItems('active').length;
   }
 
-  getItems(filterId = null) {
-    console.log('requested filter:', filterId);
+  getTotalTodosCount() {
+    if (!this.items.length) {
+      return null;
+    }
+
+    return this.getItems('all').length;
+  }
+
+  getItems(filterId) {
     if (!filterId) {
       filterId = getFilterSelected().id;
     }
-    console.log('getItems: filterId =', filterId);
 
     if (filterId === 'all') {
       return this.items;
@@ -57,24 +58,27 @@ class TodoItemsModel {
     });
   }
 
-  toggleAllTodosCompleted(isOn) {
+  toggleAllCompleted(isOn) {
     this.items = this.items.map(item => {
-      isOn && !item.completed && (item.completed = true);
-      !isOn && item.completed && (item.completed = false);
+      item.completed = !!isOn;
       return item;
     });
+  }
 
-    return this.getItems();
+  toggleItemCompleted(item) {
+    item.completed = !item.completed;
   }
 
   addItem(item) {
-    const itemId = Number(item.id);
+    const itemId = item.id || 0;
 
-    if (itemId < this.index) {
-      item.id = this.index++;
+    if (itemId < todoNextId) {
+      item.id = todoNextId;
     } else {
-      this.index = itemId;
+      todoNextId = itemId;
     }
+
+    todoNextId++;
 
     this.items.push(item);
   }

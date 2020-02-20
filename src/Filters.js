@@ -1,7 +1,13 @@
 import React from 'react';
 
 class FilterItem extends React.Component {
-  onClick(e) {
+  constructor(props) {
+    super(props);
+
+    this.selectFilter = this.selectFilter.bind(this);
+  }
+
+  selectFilter(e) {
     e.preventDefault();
 
     this.props.onFilter(this.props.filter.id);
@@ -11,7 +17,7 @@ class FilterItem extends React.Component {
     const item = this.props.filter;
     return (
       <li>
-        <a href={item.id} className={item.selected ? 'selected' : ''} onClick={event => this.onClick(event)}>{item.title}</a>
+        <a href={item.id} className={item.selected ? 'selected' : ''} onClick={this.selectFilter}>{item.title}</a>
       </li>
     )
   }

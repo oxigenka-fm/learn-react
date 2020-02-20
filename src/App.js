@@ -5,12 +5,10 @@ import TodoList from './TodoList';
 import Footer from './Footer';
 import TodoItemsModel from './TodoItemsModel';
 
-const initTodos = todos => new TodoItemsModel(todos);
-
-let model = initTodos([
-  {id: 1, title: 'Todo 1', completed: true},
+const model = new TodoItemsModel([
+  {id: 1, title: 'Todo 1', completed: false},
   {id: 2, title: 'Todo 2', completed: true},
-  {id: 3, title: 'Todo 3', completed: true},
+  {id: 3, title: 'Todo 3', completed: false},
 ]);
 
 /*
@@ -40,49 +38,78 @@ export default class App extends React.Component {
   constructor() {
     super();
 
-    console.log('App construct');
+    this.addItem = this.addItem.bind(this);
+    this.toggleItemCompleted = this.toggleItemCompleted.bind(this);
+    this.toggleAllCompleted = this.toggleAllCompleted.bind(this);
+    this.setFilterSelected = this.setFilterSelected.bind(this);
+    this.clearCompleted = this.clearCompleted.bind(this);
+    this.removeItem = this.removeItem.bind(this);
+
     this.state = {
       todos: model.getItems(),
       filters: model.getFilters()
     };
   }
 
-  addItem(text) {
-    model.addItem({label: text, completed: false});
-
+  updateTodosState() {
     this.setState({
       todos: model.getItems()
     });
   }
 
-  toggleAllCompleted() {
-    model.toggleAllTodosCompleted();
+  addItem(text) {
+    model.addItem({title: text, completed: false});
+    this.updateTodosState();
+  }
 
-    this.setState({
-      todos: model.getItems()
-    });
+  removeItem(item) {
+    model.removeItem(item);
+    this.updateTodosState();
+  }
+
+  toggleItemCompleted(item) {
+    model.toggleItemCompleted(item);
+    this.updateTodosState();
+  }
+
+  toggleAllCompleted(isOn) {
+    model.toggleAllCompleted(isOn);
+    this.updateTodosState();
+  }
+
+  clearCompleted() {
+    model.removeCompleted();
+    this.updateTodosState();
   }
 
   setFilterSelected(filterId) {
     model.setFilterSelected(filterId);
 
     this.setState({
-      filters: model.getFilters()
+      filters: model.getFilters(),
+      todos: model.getItems()
     });
   }
 
   render() {
+    const
+      activeCount = model.getActiveTodosCount(),
+      totalCount  = model.getTotalTodosCount(),
+      filters     = model.getFilters();
+
     return (
       <div>
-        <Header />
+        <Header addItem={this.addItem} />
         <section className="main">
-          <CheckAll isChecked={console.log('isChecked template') || !model.getItems('active').length} toggleAllCompleted={() => this.toggleAllCompleted()} />
-          <TodoList todos={this.state.todos} />
+          <CheckAll isChecked={!activeCount && !!totalCount} toggleAllCompleted={this.toggleAllCompleted} />
+          <TodoList todos={this.state.todos} toggleItemCompleted={this.toggleItemCompleted} removeItem={this.removeItem} />
         </section>
-        <Footer clear={() => this.clearCompleted()}
-          count={model.getActiveTodosCount()}
-          filters={model.getFilters()}
-          setFilterSelected={filterId => this.setFilterSelected(filterId)}
+        <Footer
+          countActive={activeCount}
+          countTotal={totalCount}
+          filters={filters}
+          setFilterSelected={this.setFilterSelected}
+          clearCompleted={this.clearCompleted}
         />
       </div>
     );
