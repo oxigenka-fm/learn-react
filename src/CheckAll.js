@@ -12,11 +12,13 @@ export default class CheckAll extends React.Component {
   }
 
   render() {
-    return (
-      <div>
-        <input id="toggle-all" className="toggle-all" onChange={this.toggleAllCompleted} checked={this.props.isChecked} type="checkbox" />
-        <label htmlFor="toggle-all">Mark all as complete</label>
-      </div>
-    );
+    return this.props.hideControl
+      ? null
+      : (
+        <div>
+          <input id="toggle-all" className="toggle-all" onChange={this.toggleAllCompleted} checked={this.props.isChecked} type="checkbox" />
+          <label htmlFor="toggle-all">Mark all as complete</label>
+        </div>
+      );
   }
 }

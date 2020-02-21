@@ -100,7 +100,7 @@ export default class App extends React.Component {
       <div>
         <Header addItem={this.addItem} />
         <section className="main">
-          <CheckAll isChecked={!activeCount && !!totalCount} toggleAllCompleted={this.toggleAllCompleted} />
+          <CheckAll isChecked={!activeCount && !!totalCount} hideControl={!totalCount} toggleAllCompleted={this.toggleAllCompleted} />
           <TodoList todos={this.state.todos} toggleItemCompleted={this.toggleItemCompleted} removeItem={this.removeItem} />
         </section>
         <Footer
