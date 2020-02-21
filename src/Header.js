@@ -17,7 +17,7 @@ export default class Header extends React.Component {
       return;
     }
 
-    if (value && [13, 10].includes(event.keyCode)) {
+    if ([13, 10].includes(event.keyCode)) {
       this.props.addItem(value);
       event.target.value = '';
     }

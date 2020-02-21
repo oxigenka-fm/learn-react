@@ -44,6 +44,7 @@ export default class App extends React.Component {
     this.setFilterSelected = this.setFilterSelected.bind(this);
     this.clearCompleted = this.clearCompleted.bind(this);
     this.removeItem = this.removeItem.bind(this);
+    this.updateItem = this.updateItem.bind(this);
 
     this.state = {
       todos: model.getItems(),
@@ -51,44 +52,48 @@ export default class App extends React.Component {
     };
   }
 
-  _updateTodosState() {
+  _updateState() {
     this.setState({
+      filters: model.getFilters(),
       todos: model.getItems()
     });
   }
 
   addItem(text) {
     model.addItem({title: text, completed: false});
-    this._updateTodosState();
+    this._updateState();
+  }
+
+  updateItem(item, isCancelled = false) {
+    if (!isCancelled) {
+      model.updateItem(item);
+    }
+    this._updateState();
   }
 
   removeItem(item) {
     model.removeItem(item);
-    this._updateTodosState();
+    this._updateState();
   }
 
   toggleItemCompleted(item) {
     model.toggleItemCompleted(item);
-    this._updateTodosState();
+    this._updateState();
   }
 
   toggleAllCompleted(isOn) {
     model.toggleAllCompleted(isOn);
-    this._updateTodosState();
+    this._updateState();
   }
 
   clearCompleted() {
     model.removeCompleted();
-    this._updateTodosState();
+    this._updateState();
   }
 
   setFilterSelected(filterId) {
     model.setFilterSelected(filterId);
-
-    this.setState({
-      filters: model.getFilters(),
-      todos: model.getItems()
-    });
+    this._updateState();
   }
 
   render() {
@@ -101,7 +106,12 @@ export default class App extends React.Component {
         <Header addItem={this.addItem} />
         <section className="main">
           <CheckAll isChecked={!activeCount && !!totalCount} hideControl={!totalCount} toggleAllCompleted={this.toggleAllCompleted} />
-          <TodoList todos={this.state.todos} toggleItemCompleted={this.toggleItemCompleted} removeItem={this.removeItem} />
+          <TodoList
+            todos={this.state.todos}
+            toggleItemCompleted={this.toggleItemCompleted}
+            removeItem={this.removeItem}
+            updateItem={this.updateItem}
+          />
         </section>
         <Footer
           countActive={activeCount}
