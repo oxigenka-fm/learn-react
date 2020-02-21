@@ -8,13 +8,11 @@ const indexifyItems = items => items.map(item => {
 
   do {
     id = getRandomInt(1, 1000000);
-    console.log(Date.now(), ':', id);
   } while (ids.includes(id));
 
-
   ids.push(id);
-
   item.id = id;
+
   return item;
 });
 
