@@ -16,7 +16,7 @@ class TodoItem extends React.Component {
 
   _updateItemTitle(value) {
     this.props.item.title = value;
-    this.props.editFinish(this.props.item);
+    this.props.updateItem(this.props.item);
     this.setState({editing: false});
   }
 
@@ -40,18 +40,22 @@ class TodoItem extends React.Component {
     const value = event.target.value.trim();
 
     if (!value) {
-      this.removeItem(this.props.item);
+      this.props.removeItem(this.props.item);
       return;
     }
 
     if (event.keyCode) {
-      if ([13, 10].includes(event.keyCode)) {
+      // onKeyUp handler
+      if (13 === event.keyCode) {
+        // update on Enter
         this._updateItemTitle(value);
       } else if (27 === event.keyCode) {
-        this.props.editFinish(null, true);
+        // do nothing on ESC
         this.setState({editing: false});
       }
     } else {
+      // onBlur handler
+      // update when focus has lost
       this._updateItemTitle(value);
     }
   }
@@ -60,8 +64,6 @@ class TodoItem extends React.Component {
     if (!this.props.item) {
       return null;
     }
-
-    const label = this.props.item.title;
 
     const className = [];
     if (this.props.item.completed) {
@@ -72,10 +74,11 @@ class TodoItem extends React.Component {
     if (this.state.editing) {
       className.push('editing');
       editor = (
-        <input className='edit'
+        <input className="edit"
           defaultValue={this.props.item.title}
           onBlur={this.editFinish}
-          onChange={this.editFinish}
+          onKeyUp={this.editFinish}
+          autoFocus
         />
       );
     }
@@ -84,7 +87,7 @@ class TodoItem extends React.Component {
       <li className={className.join(' ')}>
         <div className="view">
           <input className="toggle" type="checkbox" onChange={this.toggleItemCompleted} checked={this.props.item.completed} />
-          <label onDoubleClick={this.editStart}>{label}</label>
+          <label onDoubleClick={this.editStart}>{this.props.item.title}</label>
           <button className="destroy" onClick={this.removeItem}></button>
         </div>
         {editor}
@@ -104,7 +107,7 @@ export default class TodoList extends React.Component {
           item={item}
           toggleItemCompleted={this.props.toggleItemCompleted}
           removeItem={this.props.removeItem}
-          editFinish={this.props.updateItem}
+          updateItem={this.props.updateItem}
         />
       )
     );

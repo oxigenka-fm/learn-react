@@ -1,3 +1,5 @@
+import StorageAdapter from './StorageAdapter';
+
 const filters = [
   {id: 'all', title: 'All', selected: true},
   {id: 'active', title: 'Active', selected: false},
@@ -9,16 +11,15 @@ const getFilterSelected = () => {
   return currentFilter[0];
 };
 
-let todoNextId = 1;
 
-class TodoItemsModel {
+const storage = new StorageAdapter();
+
+export default class TodoItemsModel {
   constructor(items = []) {
-    this.items = items;
-
-    if (this.items.length) {
-      todoNextId = items.reduce((index, item) => Math.max(index, item.id), 0) + 1;
-    }
+    storage.initItems(items);
   }
+
+  /** Handling filters **/
 
   getFilters() {
     return filters;
@@ -28,74 +29,99 @@ class TodoItemsModel {
     filters.forEach((filter, idx) => filters[idx].selected = filter.id === filterId);
   }
 
-  getActiveTodosCount() {
-    if (!this.items.length) {
-      return null;
-    }
+  /** /Handling filters **/
 
-    return this.getItems('active').length;
+
+  /** TODOs getters **/
+
+  getActiveTodosCount() {
+    return this.getItemsFiltered('active').length;
   }
 
   getTotalTodosCount() {
-    return this.items.length;
+    return storage.getItems().length;
   }
 
-  getItems(filterId) {
+  getItemsFiltered(filterId = null) {
     if (!filterId) {
       filterId = getFilterSelected().id;
     }
 
+    const items = storage.getItems();
+
     if (filterId === 'all') {
-      return this.items;
+      return items;
     }
 
-    return this.items.filter(item => {
+    return items.filter(item => {
       return filterId === 'active' ? !item.completed : item.completed;
     });
   }
 
+  /** /TODOs getters **/
+
+
+  /** TODOs toggles **/
+
   toggleAllCompleted(isOn) {
-    this.items = this.items.map(item => {
+    const items = storage.getItems().map(item => {
       item.completed = !!isOn;
       return item;
     });
+
+    storage.saveItems(items);
   }
 
   toggleItemCompleted(item) {
-    item.completed = !item.completed;
-  }
-
-  addItem(item) {
-    const itemId = item.id || 0;
-
-    if (itemId < todoNextId) {
-      item.id = todoNextId;
-    } else {
-      todoNextId = itemId;
-    }
-
-    todoNextId++;
-
-    this.items.push(item);
-  }
-
-  updateItem(updatedItem) {
-    this.items = this.items.map(item => {
-      if (item.id === updatedItem.id) {
-        item.title = updatedItem.title;
+    const items = storage.getItems().map(todo => {
+      if (todo.id === item.id) {
+        todo.completed = !todo.completed;
       }
-
-      return item;
+      return todo;
     });
+
+    storage.saveItems(items);
+  }
+
+  /** /TODOs toggles **/
+
+
+  /** Handling TODOs **/
+
+  addItem(text) {
+    const items = storage.getItems();
+
+    const item = {
+      id: Date.now(),
+      title: text,
+      completed: false
+    };
+
+    items.push(item);
+
+    storage.saveItems(items);
+  }
+
+  updateItem(item) {
+    const items = storage.getItems().map(todo => {
+      if (todo.id === item.id) {
+        return item;
+      }
+      return todo;
+    });
+
+    storage.saveItems(items);
   }
 
   removeItem(item) {
-    this.items = this.items.filter(todo => item.id !== todo.id);
+    const items = storage.getItems().filter(todo => item.id !== todo.id);
+    storage.saveItems(items);
   }
 
   removeCompleted() {
-    this.items = this.items.filter(todo => !todo.completed);
+    const items = storage.getItems().filter(todo => !todo.completed);
+    storage.saveItems(items);
   }
-}
 
-export default TodoItemsModel;
+  /** /Handling TODOs **/
+}

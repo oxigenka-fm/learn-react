@@ -11,29 +11,6 @@ const model = new TodoItemsModel([
   {id: 3, title: 'Todo 3', completed: false},
 ]);
 
-/*
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
-*/
-
 export default class App extends React.Component {
   constructor() {
     super();
@@ -47,7 +24,7 @@ export default class App extends React.Component {
     this.updateItem = this.updateItem.bind(this);
 
     this.state = {
-      todos: model.getItems(),
+      todos: model.getItemsFiltered(),
       filters: model.getFilters()
     };
   }
@@ -55,19 +32,17 @@ export default class App extends React.Component {
   _updateState() {
     this.setState({
       filters: model.getFilters(),
-      todos: model.getItems()
+      todos: model.getItemsFiltered()
     });
   }
 
   addItem(text) {
-    model.addItem({title: text, completed: false});
+    model.addItem(text);
     this._updateState();
   }
 
-  updateItem(item, isCancelled = false) {
-    if (!isCancelled) {
-      model.updateItem(item);
-    }
+  updateItem(item) {
+    model.updateItem(item);
     this._updateState();
   }
 
