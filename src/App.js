@@ -51,7 +51,7 @@ export default class App extends React.Component {
     };
   }
 
-  updateTodosState() {
+  _updateTodosState() {
     this.setState({
       todos: model.getItems()
     });
@@ -59,27 +59,27 @@ export default class App extends React.Component {
 
   addItem(text) {
     model.addItem({title: text, completed: false});
-    this.updateTodosState();
+    this._updateTodosState();
   }
 
   removeItem(item) {
     model.removeItem(item);
-    this.updateTodosState();
+    this._updateTodosState();
   }
 
   toggleItemCompleted(item) {
     model.toggleItemCompleted(item);
-    this.updateTodosState();
+    this._updateTodosState();
   }
 
   toggleAllCompleted(isOn) {
     model.toggleAllCompleted(isOn);
-    this.updateTodosState();
+    this._updateTodosState();
   }
 
   clearCompleted() {
     model.removeCompleted();
-    this.updateTodosState();
+    this._updateTodosState();
   }
 
   setFilterSelected(filterId) {
