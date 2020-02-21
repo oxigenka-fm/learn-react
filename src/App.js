@@ -94,8 +94,7 @@ export default class App extends React.Component {
   render() {
     const
       activeCount = model.getActiveTodosCount(),
-      totalCount  = model.getTotalTodosCount(),
-      filters     = model.getFilters();
+      totalCount  = model.getTotalTodosCount();
 
     return (
       <div>
@@ -107,7 +106,7 @@ export default class App extends React.Component {
         <Footer
           countActive={activeCount}
           countTotal={totalCount}
-          filters={filters}
+          filters={this.state.filters}
           setFilterSelected={this.setFilterSelected}
           clearCompleted={this.clearCompleted}
         />
