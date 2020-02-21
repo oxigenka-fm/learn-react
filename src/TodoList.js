@@ -17,6 +17,7 @@ class TodoItem extends React.Component {
   _updateItemTitle(value) {
     this.props.item.title = value;
     this.props.editFinish(this.props.item);
+    this.setState({editing: false});
   }
 
   toggleItemCompleted() {
@@ -27,15 +28,14 @@ class TodoItem extends React.Component {
     this.props.removeItem(this.props.item);
   }
 
-  editStart(event) {
+  editStart() {
     this.setState({
       editing: this.props.item
     });
   }
 
   editFinish(event) {
-    // event.preventDefault();
-
+    event.preventDefault();
 
     const value = event.target.value.trim();
 
@@ -49,6 +49,7 @@ class TodoItem extends React.Component {
         this._updateItemTitle(value);
       } else if (27 === event.keyCode) {
         this.props.editFinish(null, true);
+        this.setState({editing: false});
       }
     } else {
       this._updateItemTitle(value);
@@ -72,9 +73,9 @@ class TodoItem extends React.Component {
       className.push('editing');
       editor = (
         <input className='edit'
-          value={this.props.item.title}
+          defaultValue={this.props.item.title}
           onBlur={this.editFinish}
-          onKeyUp={this.editFinish}
+          onChange={this.editFinish}
         />
       );
     }
@@ -83,7 +84,7 @@ class TodoItem extends React.Component {
       <li className={className.join(' ')}>
         <div className="view">
           <input className="toggle" type="checkbox" onChange={this.toggleItemCompleted} checked={this.props.item.completed} />
-          <label onDoubleClick={this.editStart(this.props.item)}>{label}</label>
+          <label onDoubleClick={this.editStart}>{label}</label>
           <button className="destroy" onClick={this.removeItem}></button>
         </div>
         {editor}

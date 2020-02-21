@@ -37,11 +37,7 @@ class TodoItemsModel {
   }
 
   getTotalTodosCount() {
-    if (!this.items.length) {
-      return null;
-    }
-
-    return this.getItems('all').length;
+    return this.items.length;
   }
 
   getItems(filterId) {
@@ -81,6 +77,16 @@ class TodoItemsModel {
     todoNextId++;
 
     this.items.push(item);
+  }
+
+  updateItem(updatedItem) {
+    this.items = this.items.map(item => {
+      if (item.id === updatedItem.id) {
+        item.title = updatedItem.title;
+      }
+
+      return item;
+    });
   }
 
   removeItem(item) {
