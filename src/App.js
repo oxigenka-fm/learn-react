@@ -77,7 +77,7 @@ export default class App extends React.Component {
       totalCount  = model.getTotalTodosCount();
 
     return (
-      <div>
+      <section className="todoapp">
         <Header addItem={this.addItem} />
         <section className="main">
           <CheckAll isChecked={!activeCount && !!totalCount} hideControl={!totalCount} toggleAllCompleted={this.toggleAllCompleted} />
@@ -95,7 +95,7 @@ export default class App extends React.Component {
           setFilterSelected={this.setFilterSelected}
           clearCompleted={this.clearCompleted}
         />
-      </div>
+      </section>
     );
   }
 }
