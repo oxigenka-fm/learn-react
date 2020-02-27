@@ -1,10 +1,26 @@
 import React from 'react';
-import './App.css';
+import Navigation from './Navigation';
+import GridControls from './GridControls';
+import GridContent from './GridContent';
+import LoadMore from './LoadMore';
+import Pagination from './Pagination';
 
-function App() {
+export default function App() {
   return (
-    <h1>Test</h1>
+    <>
+      <Navigation/>
+
+      <div class="uk-section">
+        <div class="uk-container">
+          <GridControls/>
+
+          <GridContent/>
+
+          <LoadMore/>
+
+          <Pagination/>
+        </div>
+      </div>
+    </>
   );
 }
-
-export default App;
