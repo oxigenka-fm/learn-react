@@ -8,6 +8,8 @@ export const AppProvider = ({ children }) => {
   const [view, setView] = useState("list"); // list
   const { search, setSearch, limit, setLimit, order, setOrder } = useFilter();
   const [favorites, setFavorites] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadedMoreRows, setLoadedMoreRows] = useState(0);
 
   const dataset = {
     controls: {
@@ -15,7 +17,9 @@ export const AppProvider = ({ children }) => {
       currentPage, setCurrentPage,
       search, setSearch,
       limit, setLimit,
-      order, setOrder
+      order, setOrder,
+      isLoading, setIsLoading,
+      loadedMoreRows, setLoadedMoreRows
     },
     favorites: {
       data: favorites,

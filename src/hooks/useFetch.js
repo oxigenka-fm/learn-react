@@ -1,8 +1,8 @@
 import { useEffect, useReducer } from "react";
 import request from "../lib/request";
+import useApp from "./useApp";
 
 const initialState = {
-  isLoading: false,
   data: null,
   error: null
 };
@@ -10,20 +10,20 @@ const initialState = {
 const reducer = (state, action) => {
   switch (action.type) {
     case "init":
+      action.setIsLoading(true);
       return {
-        isLoading: true,
         data: null,
         error: null
       };
     case "success":
+      action.setIsLoading(false);
       return {
-        isLoading: false,
         data: action.payload,
         error: null
       };
     case "error":
+      action.setIsLoading(false);
       return {
-        isLoading: false,
         data: null,
         error: action.payload
       };
@@ -34,13 +34,15 @@ const reducer = (state, action) => {
 };
 
 const useFetch = url => {
+  const { controls: { setIsLoading } } = useApp();
+
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    dispatch({ type: "init" });
+    dispatch({ type: "init", setIsLoading });
     request(url)
-      .then(data => dispatch({ type: "success", payload: data }))
-      .catch(error => dispatch({ type: "error", payload: error }));
+      .then(data => dispatch({ type: "success", payload: data, setIsLoading }))
+      .catch(error => dispatch({ type: "error", payload: error, setIsLoading }));
   }, [url]);
 
   return [state];
