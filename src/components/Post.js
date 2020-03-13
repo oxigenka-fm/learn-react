@@ -5,7 +5,6 @@ export default function Post({ post: { id, title, body } }) {
   const { favorites } = useApp();
 
   const toggleFavorite = id => {
-    debugger;
     if (favorites.data.includes(id)) {
       favorites.data.splice(favorites.data.indexOf(id), 1);
     } else {
