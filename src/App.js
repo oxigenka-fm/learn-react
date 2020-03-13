@@ -1,37 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import MainLayout from './layout/MainLayout';
-import GridControls from './components/GridControls';
+import Filter from './components/Filter';
 import Posts from './components/Posts';
 import LoadMore from './components/LoadMore';
 import Pagination from './components/Pagination';
-import { useFetch } from './hooks/fetch';
+import usePosts from './hooks/usePosts';
+import useApp from './hooks/useControls';
+import { AppProvider } from "./contexts/app";
 
 export default function App() {
-  // const [posts, setPosts] = useState([]);
-  const [view, setView] = useState('grid');
-  const [search, setSearch] = useState('');
-  const [order, setOrder] = useState("asc"); // desc
-  const [limit, setLimit] = useState(6); // 12,24
-  const [totalPages, setTotalPages] = useState(100);
-  const [currentPage, setCurrentPage] = useState(1);
+  console.log('Start App');
 
-  const {posts, error, isLoading } = useFetch({currentPage, limit, order, view});
+  const { controls } = useApp();
+
+  console.log('controls:', controls);
+
+  const params = [];
+
+  params.push(`_limit=${controls.limit}`);
+
+  if (controls.currentPage >= 1) {
+    params.push(`_page=${controls.currentPage}`);
+  }
+
+  if (controls.search) {
+    params.push(`q=${controls.search}`);
+  }
+  const [{ isLoading, data, error }] = usePosts(params);
 
   return (
-    <MainLayout>
-      <GridControls
-        view={view}
-        search={search}
-        order={order}
-        limit={limit}
-        setView={setView}
-        setSearch={setSearch}
-        setOrder={setOrder}
-        setLimit={setLimit}
-      />
-      <Posts posts={posts} />
-      <LoadMore />
-      <Pagination />
-    </MainLayout  >
+    <AppProvider value={controls}>
+      <MainLayout>
+        <Filter isLoading={isLoading} />
+        <Posts posts={data} error={error} />
+        <LoadMore isLoading={isLoading} />
+        <Pagination />
+      </MainLayout>
+    </AppProvider>
   );
 }
