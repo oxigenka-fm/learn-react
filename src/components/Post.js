@@ -1,5 +1,5 @@
 import React from "react";
-import useApp from "../hooks/useControls";
+import useApp from "../hooks/useApp";
 
 export default function Post({ post: { id, title, body } }) {
   const { favorites } = useApp();
